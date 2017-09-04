@@ -10,6 +10,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Loading and preprocessing the data
+
+Here we load the needed packages for diverse calculations and plotting - ggplot2
+and dplyr
+
+I read the data file into "R" and change the class of the date variable to date
+
 ```{r}
 #Loading the libraries
 library(ggplot2)
@@ -24,7 +30,12 @@ activity$date <- as.Date(activity$date)
 ```
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+Using the dplyr package I group the data by date and calculate the total steps taken on each date
+
+I calculate the mean and median on each and using these values I plot a histogram
+
+```{r echo=TRUE}
 #Processing the data
   totalStep <- activity %>% group_by(date) %>% summarise(Total.Step = sum(steps, na.rm=T))
   #Calculating the mean and median
@@ -39,9 +50,14 @@ activity$date <- as.Date(activity$date)
   
 ``` 
 
-
 ## What is the average daily activity pattern?
-```{r}
+
+Once again using dplyr I conclude the necessary calculations in order to have the
+average steps by interval
+
+After I have this data I use the ggplot2 package to provide the necessary plot
+
+```{r echo=TRUE}
 #Processing the data
   AveStep <- activity %>% group_by(interval) %>% summarise(Average.Step = mean(steps, na.rm=T))
   #Calculating the most active period on average
@@ -54,7 +70,13 @@ activity$date <- as.Date(activity$date)
 ```
 
 ## Imputing missing values
-```{r}
+
+First, I calculate the total number of missing values
+
+I decided to use the average steps over all days for the missing interval
+
+I calculate the new mean and median and provide an explanatory plot 
+```{r echo = TRUE}
   #Total number of missing values
   sum(is.na(activity$steps))
   #Creating a new dataset
@@ -81,8 +103,18 @@ activity$date <- as.Date(activity$date)
     annotate("text", x=4000,y=4,label="an affect on the mean and median")
   
 ```
+
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+I create a new factor variable as requested in the assignment. As recommended I make
+use of the weekdays() function
+
+After this is done I use once again the dplyr package to calculate the average steps
+for each interval according to weekdays/weekends
+
+Using the ggplot2 package I provide a faceted plot showing the reqeuested information.
+
+```{r echo=TRUE}
 #Creating a new factor variable
   ImpActivity$day <- (weekdays(ImpActivity$date) %in% c("Saturday","Sunday")) 
   
@@ -102,3 +134,4 @@ activity$date <- as.Date(activity$date)
     theme(plot.title = element_text(hjust=0.5))
  
 ```
+
